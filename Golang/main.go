@@ -39,7 +39,7 @@ func connect() {
 func main() {
 	router := gin.Default()
 	router.GET("/", getProduct)
-	router.Run("173.30.0.2:8080")
+	router.Run("173.30.0.2:8000")
 }
 
 func getProduct(p *gin.Context) {
