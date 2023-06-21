@@ -1,7 +1,24 @@
-#!/bin/bash
+echo "INICIALIZANDO DOCKER"
 
-# Construir a imagem para ARM64
-docker build -t mygolangapp-arm64 -f ./docker/Dockerfile --build-arg TARGETARCH=arm64 ..
+echo "Verificando Rede Docker"
+docker network rm golang_test
 
-# Executar o contêiner Docker para ARM64
-docker run -d -p 8081:8080 --name mygolangcontainer-arm64 mygolangapp-arm64
+if  docker network ls | grep "golang_test" > /dev/null; then
+    echo "Rede Docker já existe"
+else
+    echo "Criando Rede Docker"
+    docker network create --subnet 173.30.0.0/16  golang_test
+fi
+
+echo "Verificando Imagem Docker"
+
+if  docker images | grep "golang_benchmark" > /dev/null; then
+    echo "Imagem Docker já existe"
+else
+    echo "Criando Imagem Docker"
+    docker build .. -t golang-test-bench  
+fi
+
+echo "Rodar Docker"
+
+docker run -idt --rm --network golang_test --ip=173.30.0.2 --name golang_benchmark golang-test-bench
